@@ -70,24 +70,33 @@ class RandomWordState extends State<RandomWords> {
 
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont
-      ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
+    return new Builder(builder: (context) {
+      return ListTile(
+        title: Text(
+          pair.asPascalCase,
+          style: _biggerFont
+        ),
+        trailing: Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.red : null,
+        ),
+        onTap: () {
+          String snackText;
+          setState(() {
+            if (alreadySaved) {
+              snackText = 'Removed ${pair.asPascalCase} from saved names';
+              _saved.remove(pair);
+            } else {
+              snackText = 'Added ${pair.asPascalCase} to saved names';
+              _saved.add(pair);
+            }
+            final snackBar = SnackBar(
+              content: Text(snackText),
+            );
+              Scaffold.of(context).showSnackBar(snackBar);
+            });
+          });
+        },
     );
   }
 
